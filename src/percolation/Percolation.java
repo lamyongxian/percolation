@@ -80,18 +80,20 @@ public class Percolation {
 			    * Ending Site connects to last rows
 			    * 
 			    * 7   8   9
-			    * |   |   |
+			    *         |
 			    * ---------
 			    *     |
 			    *     10
 			    * 
 			    * */
-			   if (row == N) { //If row is last row, union with ending site
-				   ufP.union(N*N + 1, indexCenter);
+			   if (row == N) { //If row is last row AND site is connected to origin, union with ending site
+				  if (ufP.connected(0, indexCenter)) ufP.union(N*N + 1, indexCenter);  
 			   }
 			   
 			   isOpen[indexCenter] = true; //open site
 			   
+		   } else {
+			   throw new IllegalArgumentException();
 		   }
 		   
 	   }  // open site (row, col) if it is not open already
@@ -102,19 +104,20 @@ public class Percolation {
 			   int index = get1DArrayIndex(row, col);
 			   return isOpen[index]; //open site
 		   } else {
-			   return false;
+			   throw new IllegalArgumentException();
 		   }
 		   // is site (row, col) open?
 	   }
 	   
 	   public boolean isFull(int row, int col) {
+		   
 		   if(row <= N && col <= N) {
 			   int index = get1DArrayIndex(row, col);
 			   
 			   return ufP.connected(0, index);
 			   
 		   } else {
-			   return false; 
+			   throw new IllegalArgumentException();
 		   }
 	   } // is site (row, col) full?
 	   
@@ -149,12 +152,17 @@ public class Percolation {
 	   
 	   public static void main(String[] args)  {
 		   // test client (optional)
-		   Percolation p = new Percolation(4);
+		   Percolation p = new Percolation(3);
 
-		   System.out.println("Index for p: " + p.get1DArrayIndex(3, 3));
-		   System.out.println("Index for p: " + p.get1DArrayIndex(3, 3 -1));
+		   System.out.println("Index for (3, 3): " + p.get1DArrayIndex(3, 3));
 		   
 		   p.open(1, 1);
-		   System.out.println("Percolate? " + p.percolates());
+		   System.out.println("open(1, 1) Percolate? " + p.percolates());
+		   p.open(1, 2);
+		   System.out.println("open(1, 2) Percolate? " + p.percolates());
+		   p.open(2, 2);
+		   System.out.println("open(2, 2) Percolate? " + p.percolates());
+		   p.open(3, 2);
+		   System.out.println("open(3, 2) Percolate? " + p.percolates());
 	   }
 }
