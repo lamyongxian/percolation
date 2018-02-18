@@ -1,13 +1,11 @@
 package percolation;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-import java.lang.Math;
-import java.util.Arrays;
 
 public class Percolation {
-		protected WeightedQuickUnionUF ufP;
-		protected boolean isOpen[];
+		private WeightedQuickUnionUF ufP;
+		private boolean[] isOpen;
 		//protected int intOpen;
-		protected final int N;
+		private final int N;
 		
 	   public Percolation(int n) {
 		   if (n > 0) {
@@ -43,22 +41,30 @@ public class Percolation {
 			    */
 			   if ((col - 1) >= 1) { //Min col is 1
 				   int indexLeft = get1DArrayIndex(row, col - 1);
-				   if (isOpen[indexLeft]) ufP.union(indexLeft, indexCenter);
+				   if (isOpen[indexLeft]) {
+					ufP.union(indexLeft, indexCenter);
+				}
 			   }
 			   
 			   if ((col + 1) <= N) { //Max col is N
 				   int indexRight = get1DArrayIndex(row, col + 1);
-				   if (isOpen[indexRight]) ufP.union(indexRight, indexCenter);
+				   if (isOpen[indexRight]) {
+					ufP.union(indexRight, indexCenter);
+				}
 			   }
 			   
 			   if ((row - 1) >= 1) { //Min row is 1
 				   int indexUp = get1DArrayIndex(row - 1, col);
-				   if (isOpen[indexUp]) ufP.union(indexUp, indexCenter);
+				   if (isOpen[indexUp]) {
+					ufP.union(indexUp, indexCenter);
+				}
 			   }
 			   
 			   if ((row + 1) <= N) { //Max row is N
 				   int indexDown = get1DArrayIndex(row + 1, col);
-				   if (isOpen[indexDown]) ufP.union(indexDown, indexCenter);
+				   if (isOpen[indexDown]) {
+					ufP.union(indexDown, indexCenter);
+				}
 				   
 			   } 
 			   
@@ -87,7 +93,9 @@ public class Percolation {
 			    * 
 			    * */
 			   if (row == N) { //If row is last row AND site is connected to origin, union with ending site
-				  if (ufP.connected(0, indexCenter)) ufP.union(N*N + 1, indexCenter);  
+				  if (ufP.connected(0, indexCenter)) {
+					ufP.union(N*N + 1, indexCenter);
+				}  
 			   }
 			   
 			   isOpen[indexCenter] = true; //open site
@@ -121,10 +129,12 @@ public class Percolation {
 		   }
 	   } // is site (row, col) full?
 	   
-	   public     int numberOfOpenSites() { 
+	   public     int numberOfOpenSites() { //TODO: Use count()
 		   int count = 0;
 		   for(int i = 0; i < isOpen.length; i++) {
-			   if (isOpen[i]) count++;
+			   if (isOpen[i]){
+				count++;
+			}
 		   }
 		   return count;
 		   
