@@ -10,7 +10,7 @@ public class Percolation {
 	   public Percolation(int n) {
 		   if (n > 0) {
 			   N = n;
-			   int intNoOfSites = (N*N) + 2;
+			   int intNoOfSites = (N*N) + 2; // NxN sites + 1 origin site
 			   
 			   /*
 			    * if N = 3
@@ -18,7 +18,7 @@ public class Percolation {
 			    * 0 1 2 3 4 5 6 7 8 9 10
 			    * | F F F F F F F F F |
 			    * V                   V
-			    * Origin Site         Ending Site
+			    * Origin Site         Ending Sites
 			    */
 			   
 			   ufP = new WeightedQuickUnionUF(intNoOfSites);
@@ -32,7 +32,7 @@ public class Percolation {
 	   
 	   public    void open(int row, int col)  {
 		   
-		   if(row <= N && col <= N) {
+		   if (row <= N && row > 0 && col <= N && col > 0) {
 			   int indexCenter = get1DArrayIndex(row, col);
 			   
 			   /*
@@ -86,16 +86,16 @@ public class Percolation {
 			    * Ending Site connects to last rows
 			    * 
 			    * 7   8   9
-			    *         |
+			    * |   |   |
 			    * ---------
 			    *     |
 			    *     10
 			    * 
 			    * */
-			   if (row == N) { //If row is last row AND site is connected to origin, union with ending site
-				  if (ufP.connected(0, indexCenter)) {
+			   if (row == N) { // If row is last row AND site is connected to origin, union with ending site
+				   
 					ufP.union(N*N + 1, indexCenter);
-				}  
+				    
 			   }
 			   
 			   isOpen[indexCenter] = true; //open site
@@ -108,7 +108,7 @@ public class Percolation {
 	   
 	   public boolean isOpen(int row, int col) {
 		   
-		   if(row <= N && col <= N) {
+		   if (row <= N && row > 0 && col <= N && col > 0) {
 			   int index = get1DArrayIndex(row, col);
 			   return isOpen[index]; //open site
 		   } else {
@@ -119,9 +119,9 @@ public class Percolation {
 	   
 	   public boolean isFull(int row, int col) {
 		   
-		   if(row <= N && col <= N) {
+		   if (row <= N && row > 0 && col <= N && col > 0) {
 			   int index = get1DArrayIndex(row, col);
-			   
+
 			   return ufP.connected(0, index);
 			   
 		   } else {
@@ -129,20 +129,15 @@ public class Percolation {
 		   }
 	   } // is site (row, col) full?
 	   
-	   public     int numberOfOpenSites() { //TODO: Use count()
-		   int count = 0;
-		   for(int i = 0; i < isOpen.length; i++) {
-			   if (isOpen[i]){
-				count++;
-			}
-		   }
-		   return count;
+	   public     int numberOfOpenSites() {
+
+		   return (N*N + 2) - ufP.count();
 		   
 	   }  // number of open sites
 	   
 	   public boolean percolates() {
 		   
-		   return ufP.connected(0, N*N + 1);
+		   return ufP.connected(0, N*N + 1); //TODO: Bug on heart25.txt
 		   
 	   }     // does the system percolate?
 	   
@@ -159,6 +154,20 @@ public class Percolation {
 		   
 		   return ((row - 1) * N) + col;
 	   }
+	   
+	   //TODO: Attempt to solve backwash
+//	   private int getCorrespondingEndSite(int site) {
+//		   /*   
+//		    *   1  2  3
+//		    *   -------
+//		    * 1|1  2  3
+//		    * 2|4  5  6
+//		    * 3|7  8  9
+//		    *   10 11 12
+//		    */
+//		   
+//		   return site + N;
+//	   }
 	   
 	   public static void main(String[] args)  {
 		   // test client (optional)
